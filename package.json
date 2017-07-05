@@ -1,0 +1,31 @@
+{
+  "name": "quick_tip",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "./node_modules/.bin/nodemon app.js",
+    "deploy": "pm2 start app.js"
+  },
+  "keywords": [
+    "quick",
+    "tip"
+  ],
+  "author": "Summer_G14_zju",
+  "license": "MIT",
+  "dependencies": {
+    "crypto": "^0.0.3",
+    "jwt-simple": "^0.5.1",
+    "koa": "^2.3.0",
+    "koa-bodyparser": "^4.2.0",
+    "koa-json": "^2.0.2",
+    "koa-logger": "^3.0.1",
+    "koa-onerror": "^3.1.0",
+    "koa-router": "^7.2.1",
+    "moment": "^2.18.1",
+    "mysql": "^2.13.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  }
+}
