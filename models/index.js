@@ -30,4 +30,48 @@ const asyncQuery = (sql, values) => {
   });
 };
 
-module.exports = { asyncQuery };
+const asyncQueryWithRollback = (connection, sql, values) => {
+  return new Promise((resolve, reject) => {
+    connection.query(sql, values, (err, results) => {
+      if (err){
+        connection.rollback(() => {
+          reject(err);
+        });
+      }
+
+      resolve(results);
+    });
+  });
+};
+
+const asyncTransactionRegister = (sql, values) => {
+  return new Promise((resolve, reject) => {
+    try{
+      pool.getConnection((err, connection) => {
+        connection.beginTransaction(async (err) => {
+
+          let result = await asyncQueryWithRollback(connection, sql[0], values[0]);
+          values.push([result.insertId]);
+          await asyncQueryWithRollback(connection, sql[1], values[1]);
+
+          connection.commit((err) => {
+            if (err){
+              connection.rollback(() => {
+                reject(err);
+              });
+            }
+            console.log('Transaction success!');
+            resolve(result);
+          });
+        });
+        connection.release();
+      });
+    }
+    catch (e) {
+      console.log('rollback');
+      reject(e);
+    }
+  });
+};
+
+module.exports = { asyncQuery, asyncTransactionRegister };

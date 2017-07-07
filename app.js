@@ -8,27 +8,41 @@ const logger=require('koa-logger');
 let http=require('http')
 let server=http.createServer(app.callback());
 
-const index=require('./routes');
-const loginCheck=require('./routes/login/loginCheck');
+const index = require('./routes');
+const loginCheck = require('./routes/loginCheck');
+const user = require('./routes/user/index');
+const userUpdate = require('./routes/user/update');
 
 onerror(app);
 app.use(bodyparser({
-    enableTypes:['json','form','text']
+    enableTypes:['json','form','text'],
 }));
 
 app.use(json());
 app.use(logger());
 
-app.use(async (ctx,next)=>{
+// Logger
+app.use(async (ctx, next)=>{
     const start=new Date();
     await next();
     const ms=new Date()-start;
     console.log(`${ctx.method} ${ctx.url} - ${ms}ms`);
 });
 
+// CORS
+app.use(async (ctx, next) => {
+   await next();
+   ctx.response.set('Access-Control-Allow-Origin', '*');
+   ctx.response.set('Access-Control-Allow-Credentials', true);
+});
+
 // routes
-app.use(index.routes(),index.allowedMethods());
-app.use(loginCheck.routes(),loginCheck.allowedMethods());
+app.use(user.routes()).use(user.allowedMethods());
+app.use(loginCheck.routes()).use(loginCheck.allowedMethods());
+
+app.use(index.routes()).use(index.allowedMethods());
+app.use(userUpdate.routes()).use(userUpdate.allowedMethods());
+
 
 server.listen(3000);
 server.on('listening',onListening);
