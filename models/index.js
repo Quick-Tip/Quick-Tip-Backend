@@ -49,6 +49,7 @@ const asyncTransactionRegister = (sql, values) => {
     try{
       pool.getConnection((err, connection) => {
         connection.beginTransaction(async (err) => {
+
           let result = await asyncQueryWithRollback(connection, sql[0], values[0]);
           values.push([result.insertId]);
           await asyncQueryWithRollback(connection, sql[1], values[1]);

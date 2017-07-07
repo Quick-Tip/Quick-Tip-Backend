@@ -18,13 +18,21 @@ app.use(bodyparser({
 }));
 
 app.use(json());
-// app.use(logger());
+app.use(logger());
 
+// Logger
 app.use(async (ctx, next)=>{
     const start=new Date();
     await next();
     const ms=new Date()-start;
     console.log(`${ctx.method} ${ctx.url} - ${ms}ms`);
+});
+
+// CORS
+app.use(async (ctx, next) => {
+   await next();
+   ctx.response.set('Access-Control-Allow-Origin', '*');
+   ctx.response.set('Access-Control-Allow-Credentials', true);
 });
 
 // routes
