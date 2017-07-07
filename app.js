@@ -10,16 +10,17 @@ let server=http.createServer(app.callback());
 
 const index=require('./routes');
 const loginCheck=require('./routes/login/loginCheck');
+const user=require('./routes/user');
 
 onerror(app);
 app.use(bodyparser({
-    enableTypes:['json','form','text']
+    enableTypes:['json','form','text'],
 }));
 
 app.use(json());
-app.use(logger());
+// app.use(logger());
 
-app.use(async (ctx,next)=>{
+app.use(async (ctx, next)=>{
     const start=new Date();
     await next();
     const ms=new Date()-start;
@@ -27,8 +28,9 @@ app.use(async (ctx,next)=>{
 });
 
 // routes
-app.use(index.routes(),index.allowedMethods());
-app.use(loginCheck.routes(),loginCheck.allowedMethods());
+app.use(loginCheck.routes()).use(loginCheck.allowedMethods());
+app.use(index.routes()).use(index.allowedMethods());
+app.use(user.routes()).use(user.allowedMethods());
 
 server.listen(3000);
 server.on('listening',onListening);

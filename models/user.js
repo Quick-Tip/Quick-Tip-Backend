@@ -1,4 +1,4 @@
-const { asyncQuery } = require('./');
+const { asyncQuery, asyncTransactionRegister } = require('./');
 
 const User = {};
 
@@ -11,11 +11,39 @@ User.add = async (userInfo) => {
 };
 
 // get 可以获取服务者、消费者、商家，因为存在了同一个表中
-User.getUser = async (uid) => {
+User.getUserByID = async (uid) => {
   const sql = 'SELECT * FROM user WHERE uid = ?';
   const result = await asyncQuery(sql, [uid]);
   return result;
 };
 
+// get 可以获取服务者、消费者、商家，因为存在了同一个表中
+User.getUserByName = async (username) => {
+  try {
+    const sql = 'SELECT * FROM user WHERE username = ?';
+    const result = await asyncQuery(sql, [username]);
+    return result;
+  } catch (e) {
+    throw e;
+  }
+};
+
+// 用户注册，包含一个添加用户操作和添加账户操作的事务
+User.register = async (userInfo) => {
+  const sql = [
+    'INSERT INTO user (username, password, nickname, user_type) VALUES (?, ?, ?, ?)',
+    'INSERT INTO account (uid) VALUES (?)',
+  ];
+  const values = [
+    [userInfo.username, userInfo.password, userInfo.nickname, userInfo.user_type],
+  ];
+
+  try {
+    const result = await asyncTransactionRegister(sql, values);
+    return result;
+  } catch(e) {
+    throw e;
+  }
+};
 
 module.exports = User;

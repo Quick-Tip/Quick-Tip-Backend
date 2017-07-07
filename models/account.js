@@ -14,4 +14,10 @@ Account.update = async (uid, money) => {
   return result;
 };
 
+Account.add = async (uid) => {
+  const sql = 'INSERT INTO account (uid) VALUES (?)';
+  const result = await asyncQuery(sql, [uid]);
+  return result;
+}
+
 module.exports = Account;
