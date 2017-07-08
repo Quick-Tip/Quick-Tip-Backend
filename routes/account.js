@@ -3,13 +3,13 @@ const Account = require('../models/account');
 
 router.prefix('/account');
 
-router.get('/', async (ctx, next) => {
+router.put('/', async (ctx, next) => {
   try {
 
-  }
-  catch (e) {
+  } catch (e) {
+    console.log(e);
 
   }
 })
 
-module.exports = Account;
+module.exports = router;

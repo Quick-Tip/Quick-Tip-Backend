@@ -1,9 +1,15 @@
 const router = require('koa-router')();
-const jwt = require('jwt-simple');
 
 const User = require('../../models/user');
 
 router.prefix('/user');
+
+router.get('/', async (ctx, next) => {
+  ctx.body = {
+    code: 0,
+    msg: 'Access to the latest information succeed',
+  }
+})
 
 router.put('/', async (ctx, next) => {
   try {
@@ -11,7 +17,7 @@ router.put('/', async (ctx, next) => {
     if(!userInfo.username || !userInfo.nickname){
       return ctx.body = {
         code: -1,
-        msg: '用户信息不完整',
+        msg: 'Information incomplete',
       };
     }
 
@@ -19,17 +25,17 @@ router.put('/', async (ctx, next) => {
     if (result.affectedRows == 1) {
       return ctx.body = {
         code: 0,
-        msg: '用户昵称更新成功',
+        msg: 'Nickname has been updated',
       }
     } else if (result.affectedRows == 0) {
       return ctx.body = {
         code: -1,
-        msg: '该用户名不存在',
+        msg: 'User does not exist',
       }
     } else {
       return ctx.body = {
         code: -1,
-        msg: '影响行数超过一行',
+        msg: 'More one row error',
       }
     }
   }
@@ -37,7 +43,7 @@ router.put('/', async (ctx, next) => {
     console.log(e);
     return ctx.body = {
       code: -1,
-      msg: '用户昵称更新失败',
+      msg: 'Nickname update failed',
     }
   }
 });

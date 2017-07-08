@@ -4,9 +4,26 @@ const Relation = {};
 
 // 商家获取它的所有雇员
 Relation.getEmployeeList = async (uid) => {
-  const sql = 'SELECT * FROM employ_relation WHERE employer = ?';
-  const result = await asyncQuery(sql, [uid]);
-  return result;
+  try  {
+    const sql = 'SELECT * FROM employ_relation WHERE employer = ?';
+    const result = await asyncQuery(sql, [uid]);
+    return result;
+  } catch (e) {
+    throw e;
+  }
+
+};
+
+// 查询雇员是否在雇佣关系表中
+Relation.getEmployee = async (uid) => {
+  try  {
+    const sql = 'SELECT * FROM employ_relation WHERE employee = ?';
+    const result = await asyncQuery(sql, [uid]);
+    return result;
+  } catch (e) {
+    throw e;
+  }
+
 };
 
 // 增加雇佣关系
