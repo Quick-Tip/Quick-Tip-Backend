@@ -3,9 +3,14 @@ const { asyncQuery } = require('./');
 const Account = {};
 
 Account.get = async (uid) => {
-  const sql = 'SELECT * FROM account WHERE uid = ?';
-  const result = await asyncQuery(sql, [uid]);
-  return result;
+  try {
+    const sql = 'SELECT * FROM account WHERE uid = ?';
+    const result = await asyncQuery(sql, [uid]);
+    return result;
+  } catch (e) {
+    throw e;
+  }
+
 };
 
 Account.update = async (uid, money) => {

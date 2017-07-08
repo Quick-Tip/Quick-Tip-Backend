@@ -4,7 +4,12 @@ const Account = require('../models/account');
 router.prefix('/account');
 
 router.get('/', async (ctx, next) => {
-  const result = await Account.get(ctx.request.uid);
+  try {
+
+  }
+  catch (e) {
+
+  }
 })
 
 module.exports = Account;

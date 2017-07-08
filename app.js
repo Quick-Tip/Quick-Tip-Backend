@@ -8,9 +8,10 @@ const logger=require('koa-logger');
 let http=require('http')
 let server=http.createServer(app.callback());
 
-const index=require('./routes');
-const loginCheck=require('./routes/login/loginCheck');
-const user=require('./routes/user');
+const index = require('./routes');
+const loginCheck = require('./routes/loginCheck');
+const user = require('./routes/user/index');
+const userUpdate = require('./routes/user/update');
 
 onerror(app);
 app.use(bodyparser({
@@ -36,9 +37,12 @@ app.use(async (ctx, next) => {
 });
 
 // routes
-app.use(loginCheck.routes()).use(loginCheck.allowedMethods());
-app.use(index.routes()).use(index.allowedMethods());
 app.use(user.routes()).use(user.allowedMethods());
+app.use(loginCheck.routes()).use(loginCheck.allowedMethods());
+
+app.use(index.routes()).use(index.allowedMethods());
+app.use(userUpdate.routes()).use(userUpdate.allowedMethods());
+
 
 server.listen(3000);
 server.on('listening',onListening);

@@ -61,7 +61,7 @@ const asyncTransactionRegister = (sql, values) => {
               });
             }
             console.log('Transaction success!');
-            resolve();
+            resolve(result);
           });
         });
         connection.release();
