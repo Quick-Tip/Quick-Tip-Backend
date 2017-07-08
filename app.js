@@ -12,6 +12,7 @@ const index = require('./routes');
 const loginCheck = require('./routes/loginCheck');
 const user = require('./routes/user/index');
 const userUpdate = require('./routes/user/update');
+const userRelation = require('./routes/user/relation');
 
 onerror(app);
 app.use(bodyparser({
@@ -42,6 +43,7 @@ app.use(loginCheck.routes()).use(loginCheck.allowedMethods());
 
 app.use(index.routes()).use(index.allowedMethods());
 app.use(userUpdate.routes()).use(userUpdate.allowedMethods());
+app.use(userRelation.routes()).use(userRelation.allowedMethods());
 
 
 server.listen(3000);

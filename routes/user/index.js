@@ -14,7 +14,7 @@ router.post('/register', async (ctx, next) => {
     if(userInfo.password !== userInfo.verify){
       return ctx.body = {
         code: -1,
-        msg: '验证密码错误',
+        msg: 'Verify password error',
       }
     }
     let result = await User.getUserByName(userInfo.username);
@@ -22,13 +22,14 @@ router.post('/register', async (ctx, next) => {
     if (result.length > 0){
       return ctx.body = {
         code: -1,
-        msg: '用户已存在',
+        msg: 'User exists',
       };
     } else {
-      if(!(userInfo.username && userInfo.password && userInfo.user_type)){
+      if(!(userInfo.username && userInfo.password && userInfo.user_type != undefined)){
+        console.log(userInfo);
         return ctx.body = {
           code: -1,
-          msg: '用户信息不完整',
+          msg: 'Information incomplete',
         };
       }
       if(!userInfo.nickname){
@@ -41,19 +42,13 @@ router.post('/register', async (ctx, next) => {
         exp: moment().add(180, "days").valueOf(),
       }, key);
       await next();
-      if (ctx.token && ctx.userInfo) {
-        ctx.body = {
-          code: 0,
-          msg: '用户注册成功，已自动登录',
-          data: {
-            token: ctx.token,
-            userInfo: ctx.userInfo,
-          },
-        };
+      if (ctx.body) {
+        ctx.body.code = 0;
+        ctx.body.msg = 'Register success, logining';
       } else {
         ctx.body = {
           code: -1,
-          msg: '验证 token 失败'
+          msg: 'Token error'
         }
       }
     }
@@ -62,7 +57,7 @@ router.post('/register', async (ctx, next) => {
     console.log(e);
     return ctx.body = {
       code: -1,
-      msg: '用户注册失败',
+      msg: 'Register failed',
     };
   }
 });
@@ -71,11 +66,10 @@ router.post('/register', async (ctx, next) => {
 router.post('/login', async (ctx, next) => {
   try {
     let result = await User.getUserByName(ctx.request.body.username);
-
     if(result.length == 0){
       ctx.body = {
         code: -1,
-        msg: '用户不存在',
+        msg: 'User does not exist',
       };
     }else{
       if(result[0].password == ctx.request.body.password){
@@ -84,25 +78,19 @@ router.post('/login', async (ctx, next) => {
           exp: moment().add(180, "days").valueOf(),
         }, key);
         await next();
-        if (ctx.token && ctx.userInfo) {
-          ctx.body = {
-            code: 0,
-            msg: '密码正确, token 验证正确，登录成功',
-            data: {
-              token: ctx.token,
-              userInfo: ctx.userInfo,
-            }
-          };
+        if (ctx.body) {
+          ctx.body.code = 0;
+          ctx.body.msg = 'Password right, token right，login succeed';
         } else {
           ctx.body = {
             code: -1,
-            msg: '验证 token 失败'
+            msg: 'Token error'
           }
         }
       }else{
         ctx.body = {
           code: -1,
-          msg: '密码错误',
+          msg: 'Password wrong',
         };
       }
     }
