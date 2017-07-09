@@ -35,6 +35,8 @@ app.use(async (ctx, next) => {
    await next();
    ctx.response.set('Access-Control-Allow-Origin', '*');
    ctx.response.set('Access-Control-Allow-Credentials', true);
+   ctx.response.set('Access-Control-Allow-Methods', 'GET, POST, DELETE, PUT, OPTIONS');
+   ctx.response.set('Access-Control-Allow-Headers', 'access-token');
 });
 
 // routes

@@ -23,7 +23,6 @@ Relation.getEmployee = async (uid) => {
   } catch (e) {
     throw e;
   }
-
 };
 
 // 增加雇佣关系
