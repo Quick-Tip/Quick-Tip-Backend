@@ -14,14 +14,14 @@ router.get('/', async (ctx, next) => {
 router.put('/', async (ctx, next) => {
   try {
     const userInfo = ctx.request.body;
-    if(!userInfo.username || !userInfo.nickname){
+    if(userInfo.nickname == undefined){
       return ctx.body = {
         code: -1,
         msg: 'Information incomplete',
       };
     }
 
-    const result = await User.update(userInfo.username, userInfo.nickname);
+    const result = await User.update(ctx.uid, userInfo.nickname);
     if (result.affectedRows == 1) {
       return ctx.body = {
         code: 0,

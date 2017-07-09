@@ -38,7 +38,6 @@ const asyncQueryWithRollback = (connection, sql, values) => {
           reject(err);
         });
       }
-
       resolve(results);
     });
   });
@@ -74,4 +73,34 @@ const asyncTransactionRegister = (sql, values) => {
   });
 };
 
-module.exports = { asyncQuery, asyncTransactionRegister };
+const asyncTransactionAddReward = (sql, values) => {
+  return new Promise((resolve, reject) => {
+    try{
+      pool.getConnection((err, connection) => {
+        connection.beginTransaction(async (err) => {
+
+          for(let i = 0; i < 2; i++){
+            await asyncQueryWithRollback(connection, sql[i], values[i]);
+          }
+
+          connection.commit((err) => {
+            if (err){
+              connection.rollback(() => {
+                reject(err);
+              });
+            }
+            console.log('Transaction success!');
+            resolve();
+          });
+        });
+        connection.release();
+      });
+    }
+    catch (e) {
+      console.log('rollback');
+      reject(e);
+    }
+  });
+};
+
+module.exports = { asyncQuery, asyncTransactionRegister, asyncTransactionAddReward };

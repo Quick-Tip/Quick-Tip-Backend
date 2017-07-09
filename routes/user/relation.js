@@ -17,6 +17,7 @@ router.get('/', async (ctx, next) => {
       let nowUserBalance = await Account.get(uidResult[i].employee);
       nowUserBalance = nowUserBalance[0].balance;
       allInfoResult.push({
+        uid: nowUser.uid,
         username: nowUser.username,
         nickname: nowUser.nickname,
         user_type: nowUser.user_type,

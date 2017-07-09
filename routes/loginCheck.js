@@ -18,9 +18,11 @@ router.all('*', async (ctx, next) => {
     ||(ctx.request.body && ctx.request.body.token)
     ||(ctx.query && ctx.query.token);
   if(!token){
-    // token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAwMDEsImV4cCI6MTUxNTA1MDUwMjY0Mn0.4yCehjFe9Lme9-_CtQjeDOY1kEKZTg0K7aTtcJGmuN8';
-    // test
-    return ctx.status = 401;
+    // if(ctx.request.body.dev == undefined)
+      // 开发测试模式，自动填充 token
+      token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAwMDEsImV4cCI6MTUxNTA1MDUwMjY0Mn0.4yCehjFe9Lme9-_CtQjeDOY1kEKZTg0K7aTtcJGmuN8';
+    // else
+    //   return ctx.status = 401;
   }
 
   let decode;

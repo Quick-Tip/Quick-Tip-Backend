@@ -3,10 +3,10 @@ const { asyncQuery, asyncTransactionRegister } = require('./');
 const User = {};
 
 // 将用户信息封装到对象中
-User.update = async (username, nickname) => {
+User.update = async (uid, nickname) => {
   try {
-    const sql = 'UPDATE user SET nickname = ? WHERE username = ?';
-    const values = [nickname, username];
+    const sql = 'UPDATE user SET nickname = ? WHERE uid = ?';
+    const values = [nickname, uid];
     const result = await asyncQuery(sql, values);
     return result;
   } catch(e) {
