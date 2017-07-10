@@ -15,6 +15,7 @@ const userUpdate = require('./routes/user/update');
 const userRelation = require('./routes/user/relation');
 const reward = require('./routes/reward');
 const account = require('./routes/account');
+const nfc = require('./routes/nfc');
 
 onerror(app);
 app.use(bodyparser({
@@ -50,7 +51,7 @@ app.use(userUpdate.routes()).use(userUpdate.allowedMethods());
 app.use(userRelation.routes()).use(userRelation.allowedMethods());
 app.use(reward.routes()).use(reward.allowedMethods());
 app.use(account.routes()).use(account.allowedMethods());
-
+app.use(nfc.routes()).use(nfc.allowedMethods());
 
 server.listen(3000);
 server.on('listening',onListening);

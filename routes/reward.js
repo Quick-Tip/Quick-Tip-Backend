@@ -1,4 +1,5 @@
 const router = require('koa-router')();
+const moment = require('moment');
 
 const Reward = require('../models/reward');
 const Relation = require('../models/relation');
@@ -9,31 +10,29 @@ router.get('/', async (ctx, next) => {
   try {
     let result;
     let timeInfo = {
-      start: ctx.query.start == undefined ? 0 : ctx.query.start,
-      end: ctx.query.end == undefined ? Date() : ctx.query.start,
+      start: ctx.query.start || 0,
+      end: ctx.query.end || 'NOW()',
+    };
+    let pageInfo = {
+      p: ctx.query.p || undefined,
+      psize: ctx.query.psize || undefined,
+    };
+    if(!pageInfo.p && !pageInfo.psize){
+      pageInfo = undefined;
+    }else{
+      pageInfo.p = Number(pageInfo.p);
+      pageInfo.psize = Number(pageInfo.psize);
     }
-    if (ctx.query.waiter != undefined){
-      result = await Reward.getList({
-        getter: ctx.query.waiter,
-        setter: ctx.uid,
-      }, timeInfo);
-    } else {
-      if (ctx.query.shop != undefined){
-        const shopWaiter = await Relation.getEmployeeList(ctx.query.shop);
-        result = [];
-        for (let i = 0; i < shopWaiter.length; i++){
-          let tmp = await Reward.getList({
-            getter: shopWaiter[i].employee
-          }, timeInfo);
-          for (let j = 0; j < tmp.length; j++){
-            result.push(tmp[j]);
-          }
-        }
-      } else {
-        result = await Reward.getList({
-          setter: ctx.uid,
-        }, timeInfo);
-      }
+
+    let userInfo = {
+      getter: ctx.query.waiter,
+      nowUserID: ctx.uid,
+      nowUserType: ctx.utype,
+    };
+    result = await Reward.getList(userInfo, timeInfo, pageInfo);
+
+    for(let i = 0; i < result.length; i++){
+      result[i].dayTime = moment().format('YYYY-MM-DD');
     }
 
     return ctx.body = {
@@ -58,6 +57,7 @@ router.post('/', async (ctx, next) => {
     const rewardInfo = {
       getter: reqBody.getter,
       setter: ctx.uid,
+      shop: reqBody.shop,
       star: reqBody.star,
       comment: reqBody.comment,
       money: reqBody.money,

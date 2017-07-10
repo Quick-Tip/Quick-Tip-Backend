@@ -18,11 +18,7 @@ router.all('*', async (ctx, next) => {
     ||(ctx.request.body && ctx.request.body.token)
     ||(ctx.query && ctx.query.token);
   if(!token){
-    // if(ctx.request.body.dev == undefined)
-      // 开发测试模式，自动填充 token
-      token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAwMDEsImV4cCI6MTUxNTA1MDUwMjY0Mn0.4yCehjFe9Lme9-_CtQjeDOY1kEKZTg0K7aTtcJGmuN8';
-    // else
-    //   return ctx.status = 401;
+    return ctx.status = 401;
   }
 
   let decode;
@@ -45,6 +41,7 @@ router.all('*', async (ctx, next) => {
     if (result.length == 1) {
       // 用户存在且 token 正确
       ctx.uid = decode.id;
+      ctx.utype = result[0].user_type;
       await next();
 
       // 获取用户当前信息
