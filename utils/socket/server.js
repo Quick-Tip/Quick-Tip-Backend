@@ -20,7 +20,7 @@ wss.on('connection', function connection(ws, req) {
           id: 'server',
           ws: ws
         });
-        ws.send(`Server connected`);
+        // ws.send(`Server connected`);
       }else{
         try{
           let token = msg.substr(8);
@@ -33,7 +33,7 @@ wss.on('connection', function connection(ws, req) {
               id: decode.id,
               ws: ws,
             });
-            ws.send(`Waiter ${decode.id} connected`);
+            // ws.send(`Waiter ${decode.id} connected`);
           }
         }
         catch(err){
