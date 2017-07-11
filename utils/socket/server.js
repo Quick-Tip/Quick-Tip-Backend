@@ -48,8 +48,6 @@ wss.on('connection', function connection(ws, req) {
       console.log('Reward request');
       const info = msg.split(' ');
 
-      console.log(waiter);
-
       const waiter_ws = findWaiter(info[0]);
       if(waiter_ws){
         waiter_ws.send(`Customers give you $${info[2]} as reward in desktop ${info[1]}, score ${info[3]}/5`);
@@ -64,7 +62,7 @@ wss.on('connection', function connection(ws, req) {
 
 findWaiter = (waiter_id) => {
   for(let i = 1; i < waiter.length; i++){
-    if(waiter[i].waiter_id == waiter_id){
+    if(waiter[i].id == waiter_id){
       return waiter[i].ws;
     }
   }
