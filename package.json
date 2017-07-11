@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "./node_modules/.bin/nodemon app.js",
+    "start": "node ./utils/socket/server.js & ./node_modules/.bin/nodemon app.js",
     "deploy": "pm2 start app.js"
   },
   "keywords": [
@@ -23,7 +23,8 @@
     "koa-onerror": "^3.1.0",
     "koa-router": "^7.2.1",
     "moment": "^2.18.1",
-    "mysql": "^2.13.0"
+    "mysql": "^2.13.0",
+    "ws": "^3.0.0"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"

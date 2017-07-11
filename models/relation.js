@@ -17,7 +17,7 @@ Relation.getEmployeeList = async (uid) => {
 // 查询雇员是否在雇佣关系表中
 Relation.getEmployee = async (uid) => {
   try  {
-    const sql = 'SELECT * FROM employ_relation WHERE employee = ?';
+    const sql = 'SELECT employer, employee, nickname as nowShop FROM employ_relation e LEFT JOIN user u2 ON e.employer = u2.uid WHERE employee = ?';
     const result = await asyncQuery(sql, [uid]);
     return result;
   } catch (e) {

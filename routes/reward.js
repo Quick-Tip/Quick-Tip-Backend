@@ -3,8 +3,9 @@ const moment = require('moment');
 
 const Reward = require('../models/reward');
 const Relation = require('../models/relation');
+const ws = require('../utils/socket');
 
-router.prefix('/reward')
+router.prefix('/reward');
 
 router.get('/', async (ctx, next) => {
   try {
@@ -32,7 +33,12 @@ router.get('/', async (ctx, next) => {
     result = await Reward.getList(userInfo, timeInfo, pageInfo);
 
     for(let i = 0; i < result.length; i++){
-      result[i].dayTime = moment().format('YYYY-MM-DD');
+      // result[i].dayTime = moment(result[i].time).format('YYYY-MM-DD');
+      if((Date.now() - result[i].time) > 86400000){
+        result[i].dayTime = moment(result[i].time).format('YYYY-MM-DD hh:mm')
+      }else{
+        result[i].dayTime = moment(result[i].time).fromNow();
+      }
     }
 
     return ctx.body = {
@@ -63,6 +69,8 @@ router.post('/', async (ctx, next) => {
       money: reqBody.money,
     };
     await Reward.add(rewardInfo);
+    ws.send(`${rewardInfo.getter} ${reqBody.desk} ${rewardInfo.money} ${rewardInfo.star}`);
+
     return ctx.body = {
       code: 0,
       msg: 'Reward success',

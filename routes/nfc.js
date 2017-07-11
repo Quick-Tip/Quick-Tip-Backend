@@ -15,6 +15,7 @@ router.get('/', async (ctx, next) => {
           msg: 'Get desktop info success',
           data: {
             desktopInfo: {
+              waiter_id: result[0].waiter_id,
               shop_name: result[0].shop_name,
               waiter_name: result[0].waiter_name,
             },

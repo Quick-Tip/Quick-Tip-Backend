@@ -53,7 +53,7 @@ NFC.getNFCList = async (uid, utype) => {
     if(utype == 1){
       sql = 'SELECT * FROM nfc_bind WHERE waiter_id = ?';
     }else if(utype == 2){
-      sql = 'SELECT * FROM nfc_bind WHERE shop_id = ?';
+      sql = 'SELECT nfc.id, nfc.data, nfc.desktop_id, nfc.waiter_id, u1.nickname FROM nfc_bind nfc LEFT JOIN user u1 ON nfc.waiter_id = u1.uid WHERE shop_id = ?';
     }
     const result = await asyncQuery(sql, values);
     return result;
@@ -64,7 +64,7 @@ NFC.getNFCList = async (uid, utype) => {
 
 NFC.getDeskInfo = async (shop_id, desktop_id) => {
   try {
-    const sql = 'SELECT u1.nickname as waiter_name, u2.nickname as shop_name FROM nfc_bind nfc LEFT JOIN ' +
+    const sql = 'SELECT u1.uid as waiter_id, u1.nickname as waiter_name, u2.nickname as shop_name FROM nfc_bind nfc LEFT JOIN ' +
       'user u2 ON nfc.shop_id = u2.uid  LEFT JOIN user u1 ON nfc.waiter_id = u1.uid' +
       ' WHERE shop_id = ? AND desktop_id = ?';
     const result = await asyncQuery(sql, [shop_id, desktop_id]);

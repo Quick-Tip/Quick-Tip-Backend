@@ -57,4 +57,14 @@ User.register = async (userInfo) => {
   }
 };
 
+User.getStar = async (waiter_id) => {
+  try {
+    const sql = 'SELECT AVG(star) as star FROM reward_list WHERE getter = ?';
+    const result =  await asyncQuery(sql, [waiter_id]);
+    return result[0].star || 0;
+  } catch (e) {
+    throw e;
+  }
+};
+
 module.exports = User;
