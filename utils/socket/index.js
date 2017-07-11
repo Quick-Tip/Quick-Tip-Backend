@@ -14,4 +14,8 @@ ws.on('message', function (message) {
   console.log(message);
 });
 
+ws.on('close', function () {
+  ws.resume();
+});
+
 module.exports = ws;
