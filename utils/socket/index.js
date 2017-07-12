@@ -1,21 +1,27 @@
 const WebSocket = require('ws');
 
-const ws = new WebSocket('ws://127.0.0.1:3001', {
-  headers: {
-    waiter_id: "server"
-  }
-});
+let ws;
 
-ws.on('open', function () {
-  ws.send('Connect:');
-});
+const initConnect = () => {
+  ws = new WebSocket('ws://127.0.0.1:3001', {
+    headers: {
+      waiter_id: "server"
+    }
+  });
 
-ws.on('message', function (message) {
-  console.log(message);
-});
+  ws.on('open', function () {
+    ws.send('Connect:');
+  });
 
-ws.on('close', function () {
-  ws.resume();
-});
+  ws.on('close', function () {
+    initConnect();
+  });
+};
+
+
+initConnect();
+
+
+
 
 module.exports = ws;

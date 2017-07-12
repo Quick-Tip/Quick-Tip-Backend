@@ -12,9 +12,9 @@ const waiter = [];
 wss.on('connection', function connection(ws, req) {
 
   ws.on('message', function (msg) {
+    console.log(msg);
     // 连接请求
     if(msg.substr(0,8) == 'Connect:'){
-      console.log('Connect request');
       if(msg.length == 8){
         waiter.push({
           id: 'server',
@@ -45,7 +45,6 @@ wss.on('connection', function connection(ws, req) {
     // 打赏请求
     // 发送 服务生号、桌号、金额、评星
     else{
-      console.log('Reward request');
       const info = msg.split(' ');
 
       const waiter_ws = findWaiter(info[0]);
