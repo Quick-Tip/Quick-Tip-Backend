@@ -76,11 +76,34 @@ router.post('/', async (ctx, next) => {
       msg: 'Reward success',
     };
   } catch (e) {
-    console.log(e);
+    console.log("router:"+e);
     return ctx.body = {
       code: -1,
       msg: 'Reward failed',
     }
+  }
+});
+
+router.put('/', async (ctx, next) => {
+  try {
+    const result = await Reward.update(ctx.request.body.id, 1);
+    if(result.affectedRows == 1){
+      ctx.body = {
+        code: 0,
+        msg: 'Delete success',
+      };
+    }else{
+      ctx.body = {
+        code: -1,
+        msg: 'This reward does not exist',
+      };
+    }
+  } catch (e){
+    console.log(e);
+    ctx.body = {
+      code: -1,
+      msg: 'Delete error',
+    };
   }
 });
 

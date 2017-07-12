@@ -46,6 +46,11 @@ Reward.getList = async (userInfo, timeInfo, pageInfo) => {
     }
     values.push(userInfo.nowUserID);
 
+    if(userInfo.nowUserType == 0){
+      condition_sql.push(' visible = ?');
+      values.push(0);
+    }
+
     condition_sql.push(' time >= ?');
     values.push(timeInfo.start);
     condition_sql.push(' time <= ?');
@@ -86,7 +91,7 @@ Reward.add = async (rewardInfo) => {
       [rewardInfo.getter, rewardInfo.setter, rewardInfo.shop, rewardInfo.star, rewardInfo.comment, rewardInfo.money],
     ];
 
-    await asyncTransactionAddReward(sql, values);
+    await asyncTransactionAddReward(sql, values).catch(e => {throw e;});
     return ;
   } catch (e) {
     throw e;
@@ -103,5 +108,15 @@ Reward.update = async (id, isVisible) => {
     throw e;
   }
 };
+
+Reward.getCustomerAllRewardMoney = async (uid) => {
+  try {
+    const sql = 'SELECT SUM(money) as allRewardMoney FROM reward_list WHERE setter = ?';
+    const result = await asyncQuery(sql, [uid]);
+    return result[0].allRewardMoney || 0;
+  } catch (e){
+    throw e;
+  }
+}
 
 module.exports = Reward;

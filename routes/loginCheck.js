@@ -6,16 +6,16 @@ const key = require("../utils/encrypt").key;
 const User = require('../models/user');
 const Account = require('../models/account');
 const Relation = require('../models/relation');
+const Reward = require('../models/reward');
 
-// crcrcry test token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAwMDEsImV4cCI6MTUxNTA1MDUwMjY0Mn0.4yCehjFe9Lme9-_CtQjeDOY1kEKZTg0K7aTtcJGmuN8
-// crcrcry12 test token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAwMDcsImV4cCI6MTUxNTAzNzAzMDkwMH0.A0ieuds1XKAVAaHzl1CGw87eHte15xtxIJ4Xy3DYfB0
 // token 验证
 router.all('*', async (ctx, next) => {
   if (ctx.method === 'OPTIONS') {
     return ctx.body = 'OPTIONS REQUEST';
   }
+
   let token = ctx.header['access-token']
-    ||(ctx.request.body && ctx.request.body.token)
+    ||(ctx.request.body && ctx.request.body.token) 
     ||(ctx.query && ctx.query.token);
   if(!token){
     return ctx.status = 401;
@@ -58,6 +58,8 @@ router.all('*', async (ctx, next) => {
             result = await User.getUserByID(result[0].employer);
             body.employerName = result[0].username;
           }
+        } else if(body.user_type == 0){
+          body.allRewardMoney = await Reward.getCustomerAllRewardMoney(decode.id);
         }
 
         ctx.body = ctx.body || {};
@@ -72,6 +74,7 @@ router.all('*', async (ctx, next) => {
           user_type: body.user_type,
           balance: body.balance,
           employerName: body.employerName || '',
+          allRewardMoney: body.allRewardMoney,
         };
 
       } else {
