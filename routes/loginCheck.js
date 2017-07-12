@@ -5,17 +5,19 @@ const moment = require("moment");
 const key = require("../utils/encrypt").key;
 const User = require('../models/user');
 const Account = require('../models/account');
+const Relation = require('../models/relation');
+const Reward = require('../models/reward');
 
-// crcrcry test token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAwMDEsImV4cCI6MTUxNTA1MDUwMjY0Mn0.4yCehjFe9Lme9-_CtQjeDOY1kEKZTg0K7aTtcJGmuN8
-// crcrcry12 test token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAwMDcsImV4cCI6MTUxNTAzNzAzMDkwMH0.A0ieuds1XKAVAaHzl1CGw87eHte15xtxIJ4Xy3DYfB0
 // token 验证
 router.all('*', async (ctx, next) => {
+  if (ctx.method === 'OPTIONS') {
+    return ctx.body = 'OPTIONS REQUEST';
+  }
+
   let token = ctx.header['access-token']
-    ||(ctx.request.body && ctx.request.body.token)
+    ||(ctx.request.body && ctx.request.body.token) 
     ||(ctx.query && ctx.query.token);
   if(!token){
-    // token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAwMDEsImV4cCI6MTUxNTA1MDUwMjY0Mn0.4yCehjFe9Lme9-_CtQjeDOY1kEKZTg0K7aTtcJGmuN8';
-    // test
     return ctx.status = 401;
   }
 
@@ -39,6 +41,7 @@ router.all('*', async (ctx, next) => {
     if (result.length == 1) {
       // 用户存在且 token 正确
       ctx.uid = decode.id;
+      ctx.utype = result[0].user_type;
       await next();
 
       // 获取用户当前信息
@@ -47,6 +50,17 @@ router.all('*', async (ctx, next) => {
       result = await Account.get(decode.id);
       if (result.length == 1) {
         body.balance = result[0].balance;
+
+        if (body.user_type == 1){
+          result = await Relation.getEmployee(decode.id);
+          // 用户是雇员，且已被雇佣
+          if (result.length > 0){
+            result = await User.getUserByID(result[0].employer);
+            body.employerName = result[0].username;
+          }
+        } else if(body.user_type == 0){
+          body.allRewardMoney = await Reward.getCustomerAllRewardMoney(decode.id);
+        }
 
         ctx.body = ctx.body || {};
         ctx.body.data = ctx.body.data || {};
@@ -59,7 +73,10 @@ router.all('*', async (ctx, next) => {
           nickname: body.nickname,
           user_type: body.user_type,
           balance: body.balance,
+          employerName: body.employerName || '',
+          allRewardMoney: body.allRewardMoney,
         };
+
       } else {
         // 钱包不存在
         ctx.status = 404;
@@ -74,5 +91,6 @@ router.all('*', async (ctx, next) => {
     ctx.status = 401;
   }
 });
+
 
 module.exports = router;

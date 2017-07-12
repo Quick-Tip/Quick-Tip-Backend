@@ -5,6 +5,7 @@ const onerror=require('koa-onerror');
 const bodyparser=require('koa-bodyparser');
 const logger=require('koa-logger');
 
+
 let http=require('http')
 let server=http.createServer(app.callback());
 
@@ -13,6 +14,9 @@ const loginCheck = require('./routes/loginCheck');
 const user = require('./routes/user/index');
 const userUpdate = require('./routes/user/update');
 const userRelation = require('./routes/user/relation');
+const reward = require('./routes/reward');
+const account = require('./routes/account');
+const nfc = require('./routes/nfc');
 
 onerror(app);
 app.use(bodyparser({
@@ -35,6 +39,8 @@ app.use(async (ctx, next) => {
    await next();
    ctx.response.set('Access-Control-Allow-Origin', '*');
    ctx.response.set('Access-Control-Allow-Credentials', true);
+   ctx.response.set('Access-Control-Allow-Methods', 'GET, POST, DELETE, PUT, OPTIONS');
+   ctx.response.set('Access-Control-Allow-Headers', 'access-token');
 });
 
 // routes
@@ -44,7 +50,9 @@ app.use(loginCheck.routes()).use(loginCheck.allowedMethods());
 app.use(index.routes()).use(index.allowedMethods());
 app.use(userUpdate.routes()).use(userUpdate.allowedMethods());
 app.use(userRelation.routes()).use(userRelation.allowedMethods());
-
+app.use(reward.routes()).use(reward.allowedMethods());
+app.use(account.routes()).use(account.allowedMethods());
+app.use(nfc.routes()).use(nfc.allowedMethods());
 
 server.listen(3000);
 server.on('listening',onListening);

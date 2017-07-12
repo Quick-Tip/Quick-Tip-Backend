@@ -3,6 +3,7 @@ const router = require('koa-router')();
 const User = require('../../models/user');
 const Account = require('../../models/account');
 const Relation = require('../../models/relation');
+const Reward = require('../../models/reward');
 
 router.prefix('/user/relation');
 
@@ -17,12 +18,19 @@ router.get('/', async (ctx, next) => {
       let nowUserBalance = await Account.get(uidResult[i].employee);
       nowUserBalance = nowUserBalance[0].balance;
       allInfoResult.push({
+        uid: nowUser.uid,
         username: nowUser.username,
         nickname: nowUser.nickname,
         user_type: nowUser.user_type,
         balance: nowUserBalance,
       });
+
+      for(let i = 0; i < allInfoResult.length; i++){
+        let tmp = await Reward.getWaiterFeature(allInfoResult[i].uid, ctx.uid);
+        allInfoResult[i].reward = Object.assign(tmp);
+      }
     }
+
     ctx.body = {
       code: 0,
       msg: 'Access to all employees succeed',

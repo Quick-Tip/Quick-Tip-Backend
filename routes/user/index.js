@@ -72,7 +72,7 @@ router.post('/login', async (ctx, next) => {
         msg: 'User does not exist',
       };
     }else{
-      if(result[0].password == ctx.request.body.password){
+      if(result[0].password == ctx.request.body.password && result[0].user_type == ctx.request.body.user_type){
         ctx.request.body.token = jwt.encode({
           id: result[0].uid,
           exp: moment().add(180, "days").valueOf(),
@@ -90,7 +90,7 @@ router.post('/login', async (ctx, next) => {
       }else{
         ctx.body = {
           code: -1,
-          msg: 'Password wrong',
+          msg: 'Password or Type wrong',
         };
       }
     }

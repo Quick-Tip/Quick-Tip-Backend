@@ -14,7 +14,7 @@ Account.get = async (uid) => {
 };
 
 Account.update = async (uid, money) => {
-  const sql = 'UPDATE account SET balance = ? WHERE uid = ?';
+  const sql = 'UPDATE account SET balance = balance + ? WHERE uid = ?';
   const result = await asyncQuery(sql, [money, uid]);
   return result;
 };

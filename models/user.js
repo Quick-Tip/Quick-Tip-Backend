@@ -3,10 +3,10 @@ const { asyncQuery, asyncTransactionRegister } = require('./');
 const User = {};
 
 // 将用户信息封装到对象中
-User.update = async (username, nickname) => {
+User.update = async (uid, nickname) => {
   try {
-    const sql = 'UPDATE user SET nickname = ? WHERE username = ?';
-    const values = [nickname, username];
+    const sql = 'UPDATE user SET nickname = ? WHERE uid = ?';
+    const values = [nickname, uid];
     const result = await asyncQuery(sql, values);
     return result;
   } catch(e) {
@@ -53,6 +53,16 @@ User.register = async (userInfo) => {
     const result = await asyncTransactionRegister(sql, values);
     return result;
   } catch(e) {
+    throw e;
+  }
+};
+
+User.getStar = async (waiter_id) => {
+  try {
+    const sql = 'SELECT AVG(star) as star FROM reward_list WHERE getter = ?';
+    const result =  await asyncQuery(sql, [waiter_id]);
+    return result[0].star || 0;
+  } catch (e) {
     throw e;
   }
 };
