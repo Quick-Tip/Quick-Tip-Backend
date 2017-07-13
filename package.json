@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./utils/socket/server.js & ./node_modules/.bin/nodemon app.js",
+    "deployws": "pm2 start ./utils/socket/server.js",
     "deploy": "pm2 start app.js"
   },
   "keywords": [
