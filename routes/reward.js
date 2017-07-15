@@ -35,7 +35,7 @@ router.get('/', async (ctx, next) => {
     for(let i = 0; i < result.length; i++){
       // result[i].dayTime = moment(result[i].time).format('YYYY-MM-DD');
       if((Date.now() - result[i].time) > 86400000){
-        result[i].dayTime = moment(result[i].time).format('YYYY-MM-DD hh:mm')
+        result[i].dayTime = moment(result[i].time).format('YYYY-MM-DD HH:mm')
       }else{
         result[i].dayTime = moment(result[i].time).fromNow();
       }

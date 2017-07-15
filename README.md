@@ -5,12 +5,20 @@ The server side of Quick-Tip
 - Project is in development，the source code is in the dev branch.
 - Code will be rebased and merged into master branch after development and test.
 
+## 技术栈
+- 后端框架：Koa.js（以及一系列相应中间件）
+- 数据库：Mysql
+- 库：
+	- Mysql 库：Mysqljs + 手动封装 async/await
+	- 时间处理库：Moment.js
+	- Websocket 库：ws
+- 身份认证：JWT
+- 服务器：Nginx 反向代理 + PM2 负载均衡 + Node 服务器
 
 
-# 前后端交互 API 
+## 前后端交互 API 
 - 项目已部署至 crcrcry.com.cn
-- 已经写好并上传的接口如下
-- 所有未写可选的参数都必填
+- API 接口如下，所有未写可选的参数都必填
 - POST 请求请用 x-www-form-urlencoded 形式
 
 ---
